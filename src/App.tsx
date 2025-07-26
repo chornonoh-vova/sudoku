@@ -1,10 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SudokuBoard } from "./SudokuBoard";
 import { Controls } from "./Controls";
 import { useSudoku } from "./useSudoku";
 import { Numpad } from "./Numpad";
 import { useDifficulty } from "./useDifficulty";
 import { useMoveHistory } from "./useMoveHistory";
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
+import type { TConductorInstance } from "react-canvas-confetti/dist/types";
+
+function areEqual(solution: number[][], sudoku: number[][]) {
+  for (let row = 0; row < 9; ++row) {
+    for (let col = 0; col < 9; ++col) {
+      if (solution[row][col] !== sudoku[row][col]) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
 
 function App() {
   const { difficulty, change } = useDifficulty();
@@ -14,6 +28,18 @@ function App() {
   const [focused, setFocused] = useState({ row: -1, col: -1 });
 
   const { move, canUndo, undo, canRedo, redo } = useMoveHistory();
+
+  const [conductor, setConductor] = useState<TConductorInstance | null>(null);
+
+  useEffect(() => {
+    if (areEqual(solution, sudoku)) {
+      conductor?.run({
+        speed: 3,
+        duration: 3000,
+        delay: 0,
+      });
+    }
+  }, [solution, sudoku]);
 
   return (
     <main className="w-[100vw] h-[100vh] px-2 py-2 sm:py-4 sm:px-5 space-y-5">
@@ -59,12 +85,17 @@ function App() {
           <Numpad
             onNum={(num) => {
               const { row, col } = focused;
+              if (row === -1 || col === -1) {
+                return;
+              }
               move(row, col, sudoku[row][col], num);
               update(row, col, num);
             }}
           />
         </aside>
       </div>
+
+      <Fireworks onInit={({ conductor }) => setConductor(conductor)} />
     </main>
   );
 }
