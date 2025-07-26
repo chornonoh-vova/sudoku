@@ -4,13 +4,14 @@ import type { ComponentPropsWithRef } from "react";
 type SudokuCellProps = {
   row: number;
   col: number;
+  isInitial: boolean;
 } & ComponentPropsWithRef<"input">;
 
 export function SudokuCell({
   row,
   col,
+  isInitial,
   className,
-  readOnly,
   ...rest
 }: SudokuCellProps) {
   return (
@@ -28,13 +29,12 @@ export function SudokuCell({
         aria-label={`Sudoku cell row:${row} col:${col}`}
         className={clsx(
           "w-full h-full px-2 md:px-3 caret-transparent rounded-md outline-hidden data-[active=true]:inset-ring-2 focus:inset-ring-2 inset-ring-indigo-500",
-          readOnly && "font-semibold",
+          isInitial && "font-semibold",
         )}
         type="text"
         inputMode="numeric"
         pattern="[1-9]"
         maxLength={1}
-        readOnly={readOnly}
         {...rest}
       />
     </div>

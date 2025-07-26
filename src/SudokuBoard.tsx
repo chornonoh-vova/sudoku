@@ -28,7 +28,18 @@ export function SudokuBoard({
       : boxIndex(focused.row, focused.col);
 
   return (
-    <div className="grid grid-cols-[repeat(9,_32px)] grid-rows-[repeat(9,_32px)] md:grid-cols-[repeat(9,_38px)] md:grid-rows-[repeat(9,_38px)] place-items-stretch rounded-[4px] border border-neutral-400 shadow-md font-mono md:text-xl">
+    <div
+      className="grid grid-cols-[repeat(9,_32px)] grid-rows-[repeat(9,_32px)] md:grid-cols-[repeat(9,_38px)] md:grid-rows-[repeat(9,_38px)] place-items-stretch rounded-[4px] border border-neutral-400 shadow-md font-mono md:text-xl"
+      onKeyDown={(event) => {
+        let num = parseInt(event.key);
+        if (event.key === "Backspace" || event.key === "Delete") {
+          num = 0;
+        }
+        if (!isNaN(num) && focused.row !== -1) {
+          updateCell(focused.row, focused.col, num);
+        }
+      }}
+    >
       {sudoku.map((row, rowIdx) =>
         row.map((val, colIdx) => {
           const initialVal = initialSudoku[rowIdx][colIdx];
@@ -43,11 +54,12 @@ export function SudokuBoard({
               key={`cell-${rowIdx}-${colIdx}`}
               row={rowIdx}
               col={colIdx}
+              isInitial={initialVal !== 0}
               className={clsx(
                 val !== 0 && invalid && "bg-red-500/20",
                 highlighted && "bg-neutral-200",
               )}
-              readOnly={initialVal !== 0}
+              readOnly
               value={val ? val.toString() : ""}
               data-active={focused.row === rowIdx && focused.col === colIdx}
               onChange={(e) => {
