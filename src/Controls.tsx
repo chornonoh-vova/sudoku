@@ -1,4 +1,4 @@
-import { Lightbulb, Redo, RefreshCcw, Undo } from "lucide-react";
+import { Redo, RefreshCcw, Undo } from "lucide-react";
 import { Button } from "./Button";
 import type { DifficultyLevel } from "./constants";
 
@@ -6,7 +6,6 @@ type ControlsProps = {
   difficulty: DifficultyLevel;
   changeDifficulty: (newDifficulty: DifficultyLevel) => void;
   regenerate: () => void;
-  hint: () => void;
   canUndo: boolean;
   undo: () => void;
   canRedo: boolean;
@@ -17,7 +16,6 @@ export function Controls({
   difficulty,
   changeDifficulty,
   regenerate,
-  hint,
   canUndo,
   undo,
   canRedo,
@@ -46,10 +44,6 @@ export function Controls({
         </div>
       </div>
       <div className="flex flex-row flex-wrap gap-2 justify-center">
-        <Button onClick={hint}>
-          <Lightbulb className="size-4" />
-          Hint
-        </Button>
         <Button disabled={!canUndo} onClick={undo}>
           <Undo className="size-4" />
           Undo

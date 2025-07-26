@@ -6,15 +6,6 @@ import { Numpad } from "./Numpad";
 import { useDifficulty } from "./useDifficulty";
 import { useMoveHistory } from "./useMoveHistory";
 
-const DIRECTIONS = [
-  [-1, 0],
-  [1, 0],
-  [0, -1],
-  [0, 1],
-];
-
-const KEYS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-
 function App() {
   const { difficulty, change } = useDifficulty();
   const { solution, initialSudoku, sudoku, update, regenerate } =
@@ -25,10 +16,10 @@ function App() {
   const { move, canUndo, undo, canRedo, redo } = useMoveHistory();
 
   return (
-    <main className="w-[100vw] h-[100vh] py-4 px-5 space-y-5">
+    <main className="w-[100vw] h-[100vh] px-2 py-2 sm:py-4 sm:px-5 space-y-5">
       <h1 className="text-3xl text-center font-mono">Sudoku</h1>
       <div className="container grid md:grid-cols-2 gap-4 mx-auto">
-        <section className="place-self-center">
+        <section className="place-self-center md:self-center md:justify-self-end">
           <SudokuBoard
             sudoku={sudoku}
             solution={solution}
@@ -42,12 +33,11 @@ function App() {
           />
         </section>
 
-        <aside className="flex flex-col place-self-center gap-5">
+        <aside className="flex flex-col place-self-center md:self-center md:justify-self-start gap-5">
           <Controls
             difficulty={difficulty}
             changeDifficulty={change}
             regenerate={regenerate}
-            hint={() => {}}
             canUndo={canUndo()}
             undo={() => {
               const { row, col, num } = undo();
